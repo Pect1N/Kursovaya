@@ -471,7 +471,7 @@ int show()
 	FILE *fpin1;
 	FILE *fpin2;
 	int j, i;
-	char bus[4], num[4];
+	char bus[5], num[5];
 
 	system("cls");
 
@@ -496,13 +496,13 @@ int show()
 		printf("Busses stops on %d stop: \n", i);
 		while (!feof(fpin1))
 		{
-			fgets(bus, 4, fpin2);
-			fgets(num, 4, fpin1);
+			fgets(bus, 5, fpin2);
+			fgets(num, 5, fpin1);
 			for (j = 0; j < 3; j++)
 			{
 				if (num[j] == (48 + i))
 				{
-					printf("  %s \n", bus);
+					printf("  %s", bus);
 				}
 			}
 		}
