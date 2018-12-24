@@ -5,19 +5,11 @@
 
 int menu()
 {
-	int action;
-	int exit;
+	int action, exit = 0;
 
 	system("cls");
 
-	exit = 0;
-
-	printf("For add enter 1 \n");
-	printf("For reduct enter 2 \n");
-	printf("For delete enter 3 \n");
-	printf("For show all enter 4 \n");
-	printf("For short enter 5 \n");
-	printf("For exit enter 6 \n");
+	printf("For add enter 1 \nFor reduct enter 2 \nFor delete enter 3 \nFor show all enter 4 \nFor short enter 5 \nFor exit enter 6 \n");
 
 	scanf("%d", &action);
 	getchar();
@@ -66,16 +58,53 @@ int menu()
 int add()
 {
 	FILE *fpin;
-	char c;
-	int k, flag = 0;
-	char num[5];
-	int i = 0, yes = 1;
+	int flag = 0, i = 0, yes = 1;
+	char num[5], num1[5];
 
 	system("cls");
 
-	flag = 0;
-	k = 0;
-	c = 0;
+	fopen_s(&fpin, "number_of_busses.txt", "r");
+	if (fpin == NULL)
+	{
+		printf("Error number_of_busses.txt. Create new? \n press enter to continue \n");
+		getchar();
+		return 1;
+	}
+
+	do
+	{
+		flag = 0;
+		while (yes == 1)
+		{
+			i = 0;
+			printf("Enter number of bus (no more 3 dijits) \n");
+			fgets(num, 5, stdin);
+			scanf("%*[^\n]%*c");
+			while (num[i] != '\n')
+			{
+				if (num[i] <= '0' || num[i] > '9')
+				{
+					printf("again \n");
+					yes = 1;
+					break;
+				}
+				i++;
+				yes = 0;
+			}
+		}
+		fseek(fpin, 0, SEEK_SET);
+		while (!feof(fpin))
+		{
+			fgets(num1, 5, fpin);
+			if (strcmp(num, num1) == 0)
+			{
+				flag = yes = 1;
+				printf("again \n");
+				break;
+			}
+		}
+	} while (flag == 1);
+	fclose(fpin);
 
 	fopen_s(&fpin, "number_of_busses.txt", "a");
 	if (fpin == NULL)
@@ -85,23 +114,6 @@ int add()
 		return 1;
 	}
 
-	while (yes == 1)
-	{
-		i = 0;
-		printf("Enter number of bus (no more 3 dijits) \n");
-		fgets(num, 5, stdin);
-		while (num[i] != '\n')
-		{
-			if (num[i] <= '0' || num[i] > '9')
-			{
-				printf("again \n");
-				yes = 1;
-				break;
-			}
-			i++;
-			yes = 0;
-		}
-	}
 	fprintf(fpin, num, "%s");
 
 	fclose(fpin);
@@ -115,12 +127,12 @@ int add()
 	}
 
 	yes = 1;
-
 	while (yes == 1)
 	{
 		i = 0;
 		printf("Enter roads of bus (no more 3 stops) \n");
 		fgets(num, 5, stdin);
+		scanf("%*[^\n]%*c");
 		while (num[i] != '\n')
 		{
 			if (num[i] <= '0' || num[i] > '9' || num[i] == num[i + 1] || num[i] == num[i + 2])
@@ -134,7 +146,6 @@ int add()
 		}
 	}
 	fprintf(fpin, num, "%s");
-
 
 	fclose(fpin);
 
@@ -167,17 +178,14 @@ int reduct()
 		break;
 	}
 
-
 	return 0;
 }
 
 int redN()
 {
-	FILE *fpin;
-	FILE *fpout;
-	int nothing, shag, i, c, number_of_line, k, flag;
-
-	shag = k = nothing = flag = 0;
+	FILE *fpin, *fpout;
+	char num[5];
+	int nothing = 0, shag = 0, i, c, number_of_line, flag = 0, yes = 1;
 
 	fopen_s(&fpin, "number_of_busses.txt", "r");
 	if (fpin == NULL)
@@ -216,6 +224,7 @@ int redN()
 		system("pause");
 		return 0;
 	}
+
 	fopen_s(&fpout, "number_of_busses2.txt", "w");
 	if (fpin == NULL)
 	{
@@ -236,7 +245,24 @@ int redN()
 		}
 	}
 	printf("enter new number \n");
-	scanf("%d", &k);
+	yes = 1;
+	while (yes == 1)
+	{
+		i = 0;
+		printf("Enter number of bus (no more 3 dijits) \n");
+		fgets(num, 5, stdin);
+		while (num[i] != '\n')
+		{
+			if (num[i] <= '0' || num[i] > '9')
+			{
+				printf("again \n");
+				yes = 1;
+				break;
+			}
+			i++;
+			yes = 0;
+		}
+	}
 
 	number_of_line = 0;
 
@@ -245,9 +271,7 @@ int redN()
 		fscanf(fpin, "%d", &i);
 		number_of_line++;
 		if (number_of_line == c)
-		{
-			fprintf(fpout, "%d\n", k);
-		}
+			fprintf(fpin, num, "%s");
 		if (number_of_line != c)
 		{
 			fprintf(fpout, "%d\n", i);
@@ -268,11 +292,9 @@ int redN()
 
 int redR()
 {
-	FILE *fpin;
-	FILE *fpout;
-	int nothing, shag, i, c, number_of_line, k;
-
-	shag = k = nothing = 0;
+	FILE *fpin, *fpout;
+	char num[5];
+	int nothing = 0, shag = 0, i, c, number_of_line, yes = 1;
 
 	fopen_s(&fpin, "roads.txt", "r");
 	if (fpin == NULL)
@@ -311,6 +333,7 @@ int redR()
 		system("pause");
 		return 0;
 	}
+
 	fopen_s(&fpout, "roads2.txt", "w");
 	if (fpin == NULL)
 	{
@@ -321,8 +344,25 @@ int redR()
 
 	printf("Enter position of road \n");
 	scanf("%d", &c);
+
 	printf("enter new road \n");
-	scanf("%d", &k);
+	while (yes == 1)
+	{
+		i = 0;
+		printf("Enter number of bus (no more 3 dijits) \n");
+		fgets(num, 5, stdin);
+		while (num[i] != '\n')
+		{
+			if (num[i] <= '0' || num[i] > '9')
+			{
+				printf("again \n");
+				yes = 1;
+				break;
+			}
+			i++;
+			yes = 0;
+		}
+	}
 
 	number_of_line = 0;
 
@@ -331,9 +371,7 @@ int redR()
 		fscanf(fpin, "%d", &i);
 		number_of_line++;
 		if (number_of_line == c)
-		{
-			fprintf(fpout, "%d\n", k);
-		}
+			fprintf(fpin, num, "%s");
 		if (number_of_line != c)
 		{
 			fprintf(fpout, "%d\n", i);
@@ -348,20 +386,15 @@ int redR()
 	remove("roads.txt");
 	rename("roads2.txt", "roads.txt");
 
-
 	return 0;
 }
 
 int delete()
 {
-	FILE *fpin;
-	FILE *fpout;
-	int c, i, number_of_line, point_line, nothing, shag, yes = 1;
+	FILE *fpin, *fpout;
+	int c = 0, i = 0, number_of_line = 1, point_line, nothing = 0, shag = 0;
+
 	system("cls");
-
-	c = i = nothing = shag = 0;
-	number_of_line = 1;
-
 
 	fopen_s(&fpin, "number_of_busses.txt", "r");
 	if (fpin == NULL)
@@ -413,7 +446,6 @@ int delete()
 	scanf("%d", &c);
 
 	number_of_line = 1;
-
 	while (number_of_line <= shag)
 	{
 		fscanf(fpin, "%d", &i);
@@ -468,10 +500,9 @@ int delete()
 
 int show()
 {
-	FILE *fpin1;
-	FILE *fpin2;
+	FILE *fpin1, *fpin2;
 	int j, i;
-	char bus[5], num[5];
+	char bus[5], num[5], bus_p[5];
 
 	system("cls");
 
@@ -496,13 +527,21 @@ int show()
 		printf("Busses stops on %d stop: \n", i);
 		while (!feof(fpin1))
 		{
+			bus_p[0] = bus[0];
+			bus_p[1] = bus[1];
+			bus_p[2] = bus[2];
+			bus_p[3] = bus[3];
+			bus_p[4] = bus[4];
 			fgets(bus, 5, fpin2);
 			fgets(num, 5, fpin1);
-			for (j = 0; j < 3; j++)
+			if (strcmp(bus_p, bus) != 0)
 			{
-				if (num[j] == (48 + i))
+				for (j = 0; j < 3; j++)
 				{
-					printf("  %s", bus);
+					if (num[j] == (48 + i))
+					{
+						printf("  %s", bus);
+					}
 				}
 			}
 		}
@@ -520,10 +559,7 @@ int show()
 
 int shorty()
 {
-	FILE *fpin1;
-	FILE *fpin2;
-	FILE *fpin3;
-	FILE *fpin4;
+	FILE *fpin1, *fpin2, *fpin3, *fpin4;
 	char num1[4], num2[4], bus1[4], bus2[4];
 	int a, b, i, j, k, l, flag = 0, count = 0;
 
@@ -557,8 +593,6 @@ int shorty()
 		getchar(); 
 		return 1;
 	}
-
-
 
 	printf("Enter the starter stop (A): \n");
 	scanf("%d", &a);
@@ -629,9 +663,8 @@ int shorty()
 
 int main()
 {
-	int exit;
+	int exit = 0;
 
-	exit = 0;
 	exit = menu();
 
 	while (exit != 1)
