@@ -646,6 +646,9 @@ int shorty()
 							}
 						}
 					}
+					fseek(fpin3, 0, SEEK_SET);
+					fseek(fpin4, 0, SEEK_SET);
+
 				}
 			}
 		}
